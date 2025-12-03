@@ -278,7 +278,4 @@ Toolbox-free alternatives allow the pipeline to operate on a wide range of MATLA
 * **har_models_results.mat** — stored model metrics
 * **knn_model.mat** — trained k-NN classifier
 
----
 
-If a shorter or more academic version is needed, it can be provided as well.
-    The inclusion of a MATLAB GUI makes the project suitable for:
