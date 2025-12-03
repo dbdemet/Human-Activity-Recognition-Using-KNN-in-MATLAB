@@ -228,19 +228,19 @@ Relative paths are used so that they render directly on GitHub.
 
 - **Class distribution**
 
-  ![Class distribution](human+activity+recognition+using+smartphones/results_figs/class_distribution.png)
+  ![Class distribution](results_figs/class_distribution.png)
 
 - **Sample time series (body\_acc\_x/y/z)**
 
-  ![Sample time series](human+activity+recognition+using+smartphones/results_figs/sample_time_series.png)
+  ![Sample time series](results_figs/sample_time_series.png)
 
 - **Spectrogram – sample 3676**
 
-  ![Sample spectrogram](human+activity+recognition+using+smartphones/results_figs/sample_spectrogram.png)
+  ![Sample spectrogram](results_figs/sample_spectrogram.png)
 
 - **k‑NN / Nearest Centroid confusion matrix**
 
-  ![kNN confusion matrix](human+activity+recognition+using+smartphones/results_figs/knn_confusion_matrix.png)
+  ![kNN confusion matrix](results_figs/knn_confusion_matrix.png)
 
 All these figures can be regenerated at any time via `regenerate_results.m` or as part of the full `pipeline_run` workflow.
 
