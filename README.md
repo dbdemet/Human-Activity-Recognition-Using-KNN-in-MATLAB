@@ -195,7 +195,6 @@ When these toolboxes are not available, the project automatically falls back to:
 
 This section can be used in presentations to answer: “How was model selection performed?”, “Why k‑NN?”, and “Why did we use cross‑validation?”.
 
-### GUI (MATLAB App Designer) ve Görselleştirmeler
 
 -- **GUI – `create_app_clean.m`**
   - A MATLAB App Designer application that allows the user to:
@@ -206,11 +205,11 @@ This section can be used in presentations to answer: “How was model selection 
   - Suitable for live demonstrations: data selection → signal display → model prediction → result.
 
 - **Visualizations**
-- **`eda.m`** - EDA grafikleri
-- **`evaluate_models.m`** - Confusion matrix (MATLAB Toolbox ile), ROC curves
+- **`eda.m`** - EDA graphs
+- **`evaluate_models.m`** - Confusion matrix (with MATLAB Toolbox), ROC curves
 -- **`generate_confusion_matrices.m`** - Create professional confusion matrix figures (with activity labels)
-- **`create_app_clean.m`** - GUI grafikleri (raw signals, normalized features)
-- **`show_results.m`** - Sonuç görselleştirmeleri
+- **`create_app_clean.m`** - GUI graphs (raw signals, normalized features)
+- **`show_results.m`** - Result visualizations
 
 **Confusion Matrix Features:**
 - Use of MATLAB `confusionchart` (Statistics/Deep Learning Toolbox)
@@ -221,26 +220,21 @@ This section can be used in presentations to answer: “How was model selection 
 
 ---
 
-## Example Result Figures (`results_figs/`)
+## - Figures:
+  - `results_figs/` – EDA plots, spectrograms, confusion matrices, sample time‑series, etc.
 
 Once you run the pipeline or `regenerate_results.m`, the following figures are saved under **`human+activity+recognition+using+smartphones/results_figs/`**.  
 Relative paths are used so that they render directly on GitHub.
 
 - **Class distribution**
 
-  ![Class distribution](human+activity+recognition+using+smartphones/results_figs/class_distribution.png)
+![Class distribution](results_figs/class_distribution.png)
 
-- **Sample time series (body\_acc\_x/y/z)**
+![Sample time series](results_figs/sample_time_series.png)
 
-  ![Sample time series](human+activity+recognition+using+smartphones/results_figs/sample_time_series.png)
+![Sample spectrogram](results_figs/sample_spectrogram.png)
 
-- **Spectrogram – sample 3676**
-
-  ![Sample spectrogram](human+activity+recognition+using+smartphones/results_figs/sample_spectrogram.png)
-
-- **k‑NN / Nearest Centroid confusion matrix**
-
-  ![kNN confusion matrix](human+activity+recognition+using+smartphones/results_figs/knn_confusion_matrix.png)
+![kNN confusion matrix](results_figs/knn_confusion_matrix.png)
 
 All these figures can be regenerated at any time via `regenerate_results.m` or as part of the full `pipeline_run` workflow.
 
@@ -275,7 +269,7 @@ opts = struct('bestK', bestK, 'K', 5, 'tuneK', false);
 results = train_models(Fsel, L, opts);
 ```
 
-### 6. End‑to‑End Pipeline (your full workflow)
+### 6. End‑to‑End Pipeline 
 ```matlab
 pipeline_run('UCI HAR Dataset', struct('saveResults', true, 'summaryOnly', false));
 ```
@@ -289,10 +283,10 @@ regenerate_results;   % class_distribution, sample_time_series, sample_spectrogr
 
 ### 8. Generate Confusion Matrices for All Models
 ```matlab
-% Confusion matrix'leri oluştur ve kaydet (activity label'ları ile)
+% Generate and save confusion matrices (with activity labels)
 generate_confusion_matrices('UCI HAR Dataset');
 
-% Veya mevcut results'tan oluştur:
+% Or generate from an existing results struct:
 generate_confusion_matrices('UCI HAR Dataset', struct('loadFromFile', true));
 ```
 

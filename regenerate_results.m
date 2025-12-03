@@ -341,7 +341,8 @@ try
     if exist('spectrogram','file') == 2
         spectrogram(x, 64, 60, 256, fs, 'yaxis');
     else
-        % toolbox yoksa, basit STFT ile yaklaşık aynı görüntüyü üret
+        % If the Signal Processing Toolbox is not available, produce an
+        % approximate image using a simple manual STFT implementation
         win = 64; noverlap = 60; nfft = 256;
         step = win - noverlap;
         w = 0.54 - 0.46*cos(2*pi*(0:win-1)'/(win-1));
@@ -359,7 +360,8 @@ try
         xlabel('Time (s)'); ylabel('Frequency (Hz)');
     end
     title(sprintf('Spectrogram sample %d', sampleIndex));
-    % Orijinal görselde colorbar yok, o yüzden varsa kaldır
+    % The original reference image does not include a colorbar, so remove
+    % it here if it exists to better match the reference presentation
     cb = colorbar('peer',gca);
     if ~isempty(cb) && isvalid(cb)
         delete(cb);
