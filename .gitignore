@@ -1,0 +1,19 @@
+# Ignore generated figures and MATLAB binary/model files
+results_figs/
+*.fig
+*.png
+
+# MATLAB binary model/result files
+*.mat
+
+# MATLAB build artifacts
+*.mex*
+*.asv
+
+# Misc
+Thumbs.db
+.DS_Store
+
+# Node / Python artifacts (if any)
+node_modules/
+venv/
