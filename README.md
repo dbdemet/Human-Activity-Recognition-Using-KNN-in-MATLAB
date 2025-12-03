@@ -135,173 +135,287 @@ With this layout you can:
 ### 🚀 Pipeline & Automation
 - **`pipeline_run.m`**
   - End‑to‑end runner that glues everything together:
-    1. **Loading & preprocessing** of raw data / pre‑computed features
-    2. **Feature extraction** from raw signals
-    3. **Feature selection** (optional)
-    4. **Training & validation** of ML models
-    5. **Evaluation & visualization** (confusion matrices, etc.)
+    # **UCI HAR – Human Activity Recognition Using Smartphones**
 
-- **`regenerate_results.m`**
-  - Lightweight script that only regenerates the key **presentation figures** in `results_figs`:
-    - `class_distribution.png`
-    - `sample_time_series.png`
-    - `sample_spectrogram.png` (reference‑style spectrogram for sample 3676)
-    - `knn_confusion_matrix.png`
+    ## **Overview**
 
----
+    This repository presents an end-to-end **Human Activity Recognition (HAR)** pipeline implemented entirely in **MATLAB**, using the well-known **UCI HAR** dataset.
+    The objective is to automatically classify six human activities using inertial sensor signals (3-axis accelerometer and gyroscope) collected from a smartphone worn at the waist:
 
-## MATLAB Toolboxes and Functions
+    * **WALKING**
+    * **WALKING_UPSTAIRS**
+    * **WALKING_DOWNSTAIRS**
+    * **SITTING**
+    * **STANDING**
+    * **LAYING**
 
-This project can benefit from MATLAB toolboxes, but does **not strictly depend** on them:
+    The project implements a complete workflow, including:
 
-- **Statistics and Machine Learning Toolbox**
-  - `confusionmat`, `confusionchart` – professional confusion matrices
-  - `cvpartition`, `kfoldPredict` – K‑fold cross‑validation helpers
-  - `relieff`, `pca`, `sequentialfs` – feature selection and dimensionality reduction
+    * **Loading and preprocessing of raw data**
+    * **Signal-processing-based feature extraction**
+    * **Statistical feature selection**
+    * **Training and validation of machine learning models**
+    * **Visualization of results and a MATLAB GUI for demonstration**
 
-- **Signal Processing Toolbox**
-  - `spectrogram` – time‑frequency analysis and spectrogram visualization
+    An interactive **MATLAB App Designer GUI** (`create_app_clean.m`) is provided for real-time visualization, signal inspection, and classification using the trained k-NN model.
 
-- **Deep Learning Toolbox** (optional)
-  - On some MATLAB setups, `confusionchart` and related plotting utilities are provided here.
+    MATLAB toolboxes enhance the workflow when available—particularly **Statistics and Machine Learning Toolbox** and **Signal Processing Toolbox**—while **toolbox-free fallback implementations** ensure the pipeline remains functional in minimal MATLAB environments.
 
-When these toolboxes are not available, the project automatically falls back to:
+    ---
 
-- F‑score based feature selection (`feature_selection.m`)
-+- Manual confusion matrix and metric computation (`train_models.m`)
-- Toolbox‑free STFT and spectrogram plotting (`regenerate_results.m`, `spectrogram_utils.m`)
+    ## **Dataset Description**
 
-### Feature Selection Algorithm
-- **`feature_selection.m`** - ReliefF, F-score, PCA, Sequential FS
+    * **Source:** UCI Machine Learning Repository — *Human Activity Recognition Using Smartphones Dataset*
+    * **Device:** Samsung Galaxy S smartphone worn on the waist
+    * **Sensors:**
 
-### ML Strategy (Models and strategy)
+      * 3-axis accelerometer (total + body acceleration)
+      * 3-axis gyroscope
+    * **Sampling Rate:** 50 Hz
+    * **Windowing:**
 
-- **Models**
-  - **k‑Nearest Neighbors (k‑NN)**:
-    - A simple, interpretable baseline commonly used for HAR tasks.
-    - The project includes both a **manual** (toolbox‑free) implementation and an optional `fitcknn`-based version.
-  - **Nearest Centroid Classifier**:
-    - Uses the mean feature vector per class as the prototype.
-    - Fast and interpretable, especially useful for low‑dimensional feature sets.
+      * 2.56-second windows (128 samples)
+      * Each window includes 9 time-series signals
+    * **Pre-computed features:**
 
-- **Evaluation and strategy**
-  - **K‑fold cross‑validation** (`train_models.m`, `tune_k_values.m`):
-    - The dataset is split into K folds; each fold is used once for testing and K‑1 times for training.
-    - Stratified sampling is used to preserve class balance.
-  - **Hyperparameter tuning**:
-    - `tune_k_values.m` tries a range of odd `k` values using cross‑validation and selects the best performing one.
-  - **Metrics**:
-    - Accuracy, precision, recall, F1‑score and confusion matrix.
+      * `X_train.txt`, `X_test.txt` contain ≈560 features
+      * `y_train.txt`, `y_test.txt` contain 6 activity labels
 
-This section can be used in presentations to answer: “How was model selection performed?”, “Why k‑NN?”, and “Why did we use cross‑validation?”.
+    This project utilizes:
 
+    1. **Pre-computed feature matrices** for rapid training and baselines
+    2. **Raw “Inertial Signals”** for custom feature extraction and spectrogram-based analysis
 
--- **GUI – `create_app_clean.m`**
-  - A MATLAB App Designer application that allows the user to:
-    - Select the dataset,
-    - Display the selected sample's time series and spectrogram,
-    - Run activity prediction using the trained k‑NN model,
-    - View prediction results and class probabilities.
-  - Suitable for live demonstrations: data selection → signal display → model prediction → result.
+    ---
 
-- **Visualizations**
-- **`eda.m`** - EDA graphs
-- **`evaluate_models.m`** - Confusion matrix (with MATLAB Toolbox), ROC curves
--- **`generate_confusion_matrices.m`** - Create professional confusion matrix figures (with activity labels)
-- **`create_app_clean.m`** - GUI graphs (raw signals, normalized features)
-- **`show_results.m`** - Result visualizations
+    ## **Project Structure**
 
-**Confusion Matrix Features:**
-- Use of MATLAB `confusionchart` (Statistics/Deep Learning Toolbox)
-- Professional styling with a sky/blue colormap
-- Automatic loading of activity labels (`WALKING`, `WALKING_UPSTAIRS`, etc.)
-- Numeric values displayed inside matrix cells
-- Save as high‑quality PNG and FIG formats
+    ```
+    UCI HAR Dataset/
+    results_figs/
+        class_distribution.png
+        sample_time_series.png
+        sample_spectrogram.png
+        knn_confusion_matrix.png
+    load_prepare.m
+    extract_features.m
+    feature_selection.m
+    train_models.m
+    tune_k_values.m
+    evaluate_models.m
+    generate_confusion_matrices.m
+    pipeline_run.m
+    create_app_clean.m
+    eda.m
+    spectrogram_utils.m
+    regenerate_results.m
+    predict_knn_model.m
+    save_trained_knn.m
+    show_results.m
+    har_models_results.mat
+    knn_model.mat
+    ```
 
----
+    This structure enables:
 
-## - Figures:
-  - `results_figs/` – EDA plots, spectrograms, confusion matrices, sample time‑series, etc.
+    * Full pipeline execution via **`pipeline_run`**
+    * Reproduction of all presentation figures via **`regenerate_results`**
+    * Launching a graphical demo via **`create_app_clean`**
 
-Once you run the pipeline or `regenerate_results.m`, the following figures are saved under **`human+activity+recognition+using+smartphones/results_figs/`**.  
-Relative paths are used so that they render directly on GitHub.
+    ---
 
-- **Class distribution**
+    ## **Key Components**
 
-![Class distribution](results_figs/class_distribution.png)
+    ### **1. GUI Demo – `create_app_clean.m`**
 
-![Sample time series](results_figs/sample_time_series.png)
+    A MATLAB App Designer application supporting:
 
-![Sample spectrogram](results_figs/sample_spectrogram.png)
+    * Raw and processed signal visualization
+    * Interactive selection of samples
+    * Real-time activity classification with the saved k-NN model
+    * Visual display of probabilities and predicted labels
 
-![kNN confusion matrix](results_figs/knn_confusion_matrix.png)
+    Designed for teaching, demonstrations, and live presentations.
 
-All these figures can be regenerated at any time via `regenerate_results.m` or as part of the full `pipeline_run` workflow.
+    ---
 
----
+    ### **2. Data Loading & Preprocessing**
 
-## Quick Start
+    * **`load_prepare.m`**
+      Loads all UCI HAR feature sets, labels, and subject identifiers.
 
-### 1. Launch the GUI (App Designer)
-```matlab
-app = create_app_clean();
-```
+    * **`extract_features.m`**
+      Implements **toolbox-free feature extraction** from raw Inertial Signals:
 
-### 2. Feature Extraction (from raw signals)
-```matlab
-[F, L] = extract_features('UCI HAR Dataset');
-```
+      * Mean, standard deviation, median
+      * RMS
+      * Signal energy
+      * Zero-crossing rate
+      * Band-power features
+        Produces a feature matrix aligned with corresponding activity labels.
 
-### 3. Feature Selection
-```matlab
-optsFS.numFeatures = 50;
-[selIdx, selNames, Fsel] = feature_selection(F, L, 'relieff', optsFS);
-```
+    ---
 
-### 4. (Optional) Hyperparameter Tuning for k‑NN
-```matlab
-[bestK, kStats] = tune_k_values(Fsel, L);
-```
+    ### **3. Exploratory Data Analysis & Spectrograms**
 
-### 5. Model Training & Validation
-```matlab
-opts = struct('bestK', bestK, 'K', 5, 'tuneK', false);
-results = train_models(Fsel, L, opts);
-```
+    * **`eda.m`**
+      Generates dataset distribution plots, time-series examples, and a reference spectrogram.
 
-### 6. End‑to‑End Pipeline 
-```matlab
-pipeline_run('UCI HAR Dataset', struct('saveResults', true, 'summaryOnly', false));
-```
+    * **`spectrogram_utils.m`**
+      Provides unified utilities for spectrogram generation and feature computation.
 
-### 7. Regenerate Presentation Figures (EDA + spectrogram + confusion matrix)
+    ---
 
-```matlab
-cd human+activity+recognition+using+smartphones
-regenerate_results;   % class_distribution, sample_time_series, sample_spectrogram, knn_confusion_matrix
-```
+    ### **4. Feature Selection**
 
-### 8. Generate Confusion Matrices for All Models
-```matlab
-% Generate and save confusion matrices (with activity labels)
-generate_confusion_matrices('UCI HAR Dataset');
+    * **`feature_selection.m`**
+      Supports multiple selection strategies:
 
-% Or generate from an existing results struct:
-generate_confusion_matrices('UCI HAR Dataset', struct('loadFromFile', true));
-```
+      * ReliefF (toolbox)
+      * F-score (toolbox-free)
+      * PCA
+      * Sequential forward selection
 
----
+    ---
 
-## Conclusion
+    ### **5. Machine Learning Models**
 
-This project demonstrates a complete, **practical HAR workflow** on the UCI dataset, from raw signal loading and preprocessing, through signal‑processing‑based feature extraction and statistical feature selection, to training and validating classic machine learning models (k‑NN and Nearest Centroid).  
-The resulting figures (EDA, spectrograms, confusion matrices) and the App Designer GUI make it suitable both as a **teaching resource** and as a **presentation‑ready demo**.  
-With toolbox‑free fallbacks and clear separation of steps, the code can be adapted or extended to new sensors, additional activities, or alternative models with minimal changes.
+    * **k-Nearest Neighbors (k-NN)**
+      Implemented both manually and via MATLAB’s `fitcknn` when available.
+      Serves as an interpretable, dataset-appropriate classifier.
 
----
+    * **Nearest Centroid Classifier**
+      A lightweight baseline model using class-mean prototypes.
 
-## Output Files
+    Both models are evaluated using:
 
-- **`human+activity+recognition+using+smartphones/results_figs/`** – all figures (EDA, spectrograms, confusion matrices, etc.)
-- **`human+activity+recognition+using+smartphones/har_models_results.mat`** – saved model metrics
-- **`human+activity+recognition+using+smartphones/knn_model.mat`** – saved k‑NN model
+    * **Stratified K-fold cross-validation**
+    * **Accuracy, precision, recall, F1-score, and confusion matrices**
+
+    ---
+
+    ### **6. Model Evaluation & Visualization**
+
+    * **`evaluate_models.m`**
+      Computes evaluation metrics and generates confusion matrices.
+
+    * **`generate_confusion_matrices.m`**
+      Produces publication-quality confusion matrices with activity labels.
+
+    * **`show_results.m`**
+      Provides convenient visualization and saving of result summaries.
+
+    ---
+
+    ### **7. Automation & Reproducibility**
+
+    * **`pipeline_run.m`**
+      Executes the entire workflow from data loading to final evaluation.
+
+    * **`regenerate_results.m`**
+      Reproduces all figures stored in `results_figs/`:
+
+      * Class distribution
+      * Sample time series
+      * Reference spectrogram
+      * k-NN confusion matrix
+
+    ---
+
+    ## **Figures**
+
+    All figures generated by the project are stored in:
+
+    `human+activity+recognition+using+smartphones/results_figs/`
+
+    ![Class distribution](results_figs/class_distribution.png)
+
+    ![Sample time series](results_figs/sample_time_series.png)
+
+    ![Sample spectrogram](results_figs/sample_spectrogram.png)
+
+    ![kNN confusion matrix](results_figs/knn_confusion_matrix.png)
+
+    These figures can be reproduced at any time using the scripts mentioned above.
+
+    ---
+
+    ## **Quick Start**
+
+    ### **Launch the GUI**
+
+    ```matlab
+    app = create_app_clean();
+    ```
+
+    ### **Extract Features**
+
+    ```matlab
+    [F, L] = extract_features('UCI HAR Dataset');
+    ```
+
+    ### **Feature Selection**
+
+    ```matlab
+    optsFS.numFeatures = 50;
+    [selIdx, selNames, Fsel] = feature_selection(F, L, 'relieff', optsFS);
+    ```
+
+    ### **Optional: Hyperparameter Tuning**
+
+    ```matlab
+    [bestK, kStats] = tune_k_values(Fsel, L);
+    ```
+
+    ### **Model Training**
+
+    ```matlab
+    opts = struct('bestK', bestK, 'K', 5, 'tuneK', false);
+    results = train_models(Fsel, L, opts);
+    ```
+
+    ### **Full Pipeline**
+
+    ```matlab
+    pipeline_run('UCI HAR Dataset', struct('saveResults', true, 'summaryOnly', false));
+    ```
+
+    ### **Recreate Presentation Figures**
+
+    ```matlab
+    cd human+activity+recognition+using+smartphones
+    regenerate_results;
+    ```
+
+    ### **Generate Confusion Matrices**
+
+    ```matlab
+    generate_confusion_matrices('UCI HAR Dataset');
+    ```
+
+    ---
+
+    ## **Conclusion**
+
+    This repository delivers a complete and reproducible **HAR analysis framework** in MATLAB.
+    The workflow integrates raw-signal processing, feature engineering, traditional ML classification, cross-validated evaluation, and fully automated visualization.
+    The inclusion of a MATLAB GUI makes the project suitable for:
+
+    * Educational use
+    * Research comparisons
+    * Live demonstrations
+    * Rapid prototyping
+
+    Toolbox-free alternatives allow the pipeline to operate on a wide range of MATLAB installations while maintaining high interpretability and methodological clarity.
+
+    ---
+
+    ## **Output Files**
+
+    * **results_figs/** — visualizations (EDA, spectrograms, confusion matrices)
+    * **har_models_results.mat** — stored model metrics
+    * **knn_model.mat** — trained k-NN classifier
+
+    ---
+
+    If a shorter or more academic version is needed, it can be provided as well.
